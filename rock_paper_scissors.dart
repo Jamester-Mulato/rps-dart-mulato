@@ -10,15 +10,36 @@ String getPlayerName(String playerNumber) {
       : input!.trim();
 }
 
-/// Gets a player's move from the keyboard.
+/// Checks whether a move is valid and returns it in lowercase.
+String? validateMove(String input) {
+  const List<String> validMoves = ['rock', 'paper', 'scissors'];
+
+  String move = input.trim().toLowerCase();
+
+  if (validMoves.contains(move)) {
+    return move;
+  }
+
+  return null;
+}
+
+/// Gets a valid move from a player.
 String getMove(String playerName) {
-  stdout.write(
-    '$playerName, enter your move (rock/paper/scissors): ',
-  );
+  while (true) {
+    stdout.write(
+      '$playerName, enter your move (rock/paper/scissors): ',
+    );
 
-  String? input = stdin.readLineSync();
+    String? input = stdin.readLineSync();
 
-  return input?.trim().toLowerCase() ?? '';
+    String? validMove = validateMove(input ?? '');
+
+    if (validMove != null) {
+      return validMove;
+    }
+
+    print('Invalid move. Please type rock, paper, or scissors.');
+  }
 }
 
 /// Decides the winner between two moves.
@@ -42,12 +63,25 @@ void main() {
   String playerOneName = getPlayerName('Player 1');
   String playerTwoName = getPlayerName('Player 2');
 
+  int playerOneScore = 0;
+  int playerTwoScore = 0;
+
   String playerOneMove = getMove(playerOneName);
   String playerTwoMove = getMove(playerTwoName);
 
   String? winner = decideWinner(playerOneMove, playerTwoMove);
 
+  if (winner == 'Player 1') {
+    playerOneScore++;
+  } else if (winner == 'Player 2') {
+    playerTwoScore++;
+  }
+
   print('$playerOneName chose $playerOneMove.');
   print('$playerTwoName chose $playerTwoMove.');
   print('Result: ${winner ?? "It\'s a draw!"}');
+  print(
+    'Score -> $playerOneName: $playerOneScore | '
+    '$playerTwoName: $playerTwoScore',
+  );
 }
