@@ -65,23 +65,66 @@ void main() {
 
   int playerOneScore = 0;
   int playerTwoScore = 0;
+  int roundNumber = 1;
 
-  String playerOneMove = getMove(playerOneName);
-  String playerTwoMove = getMove(playerTwoName);
+  String playAgain;
 
-  String? winner = decideWinner(playerOneMove, playerTwoMove);
+  do {
+    print('\n--- Round $roundNumber ---');
 
-  if (winner == 'Player 1') {
-    playerOneScore++;
-  } else if (winner == 'Player 2') {
-    playerTwoScore++;
-  }
+    String playerOneMove = getMove(playerOneName);
 
-  print('$playerOneName chose $playerOneMove.');
-  print('$playerTwoName chose $playerTwoMove.');
-  print('Result: ${winner ?? "It\'s a draw!"}');
+    // Print blank lines to hide Player 1's move.
+    for (int i = 0; i < 30; i++) {
+      print('');
+    }
+
+    String playerTwoMove = getMove(playerTwoName);
+
+    String? winner = decideWinner(
+      playerOneMove,
+      playerTwoMove,
+    );
+
+    if (winner == 'Player 1') {
+      playerOneScore++;
+    } else if (winner == 'Player 2') {
+      playerTwoScore++;
+    }
+
+    print('\n$playerOneName chose $playerOneMove.');
+    print('$playerTwoName chose $playerTwoMove.');
+
+    if (winner == 'Player 1') {
+      print('Result: $playerOneName wins the round!');
+    } else if (winner == 'Player 2') {
+      print('Result: $playerTwoName wins the round!');
+    } else {
+      print('Result: ${winner ?? "It\'s a draw!"}');
+    }
+
+    print(
+      'Score -> $playerOneName: $playerOneScore | '
+      '$playerTwoName: $playerTwoScore',
+    );
+
+    stdout.write('Play again? (y/n): ');
+    playAgain = stdin.readLineSync()?.trim().toLowerCase() ?? 'n';
+
+    roundNumber++;
+  } while (playAgain == 'y');
+
+  print('\n===== FINAL SCORE =====');
   print(
-    'Score -> $playerOneName: $playerOneScore | '
+    '$playerOneName: $playerOneScore | '
     '$playerTwoName: $playerTwoScore',
   );
+
+  if (playerOneScore > playerTwoScore) {
+    print('Overall winner: $playerOneName');
+  } else if (playerTwoScore > playerOneScore) {
+    print('Overall winner: $playerTwoName');
+  } else {
+    print('Overall winner: It\'s a draw!');
+  }
 }
